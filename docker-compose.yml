@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/app
+    env_file:
+      - ./backend/.env.dev
+  mongodb-service:
+    image: mongo:5.0.3
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_volume:/data/db
+
+volumes:
+  mongodb_volume:
