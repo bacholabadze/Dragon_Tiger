@@ -13,11 +13,13 @@ services:
     env_file:
       - ./backend/.env.dev
   mongodb-service:
-    image: mongo:5.0.3
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_volume:/data/db
+      image: mongo:5.0.3
+      logging:
+        driver: none
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongodb_volume:/data/db
 
 volumes:
   mongodb_volume:

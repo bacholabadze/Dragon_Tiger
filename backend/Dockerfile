@@ -1,12 +1,12 @@
-FROM python:3.8-slim-buster
+
+FROM python:3.9-slim-buster
 
 WORKDIR /usr/src/app
 
 RUN apt-get update \
-  && apt-get -y install netcat gcc curl
+  && apt-get -y install netcat gcc \
+    && apt-get clean
 
-COPY req.txt .
 RUN pip install --upgrade pip
-RUN pip install -r req.txt
-
 COPY . .
+RUN pip install -r req.txt

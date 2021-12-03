@@ -1,0 +1,46 @@
+.dragon {
+  border-style: solid;
+  border-color: rgb(5, 122, 50);
+  text-align: center;
+  width: 200px;
+  height: 400px;
+  top: 30%;
+  left: 50%;
+  position: absolute;
+}
+
+.tiger {
+  border-style: solid;
+  text-align: center;
+  border-color: rgb(143, 42, 129);
+  width: 200px;
+  height: 400px;
+  top: 30%;
+  right: 55%;
+  position: absolute;
+}
+
+.btn {
+  text-align: center;
+  background-color: rgb(143, 42, 129);
+  top: 80%;
+  right: 50%;
+  position: absolute;
+  font-size: 20px;
+  border-style: none;
+}
+
+button {
+  width: 100px;
+  height: 60px;
+}
+
+span {
+  position: absolute;
+  left: 30%;
+  top: 10%;
+  font-size: 20px;
+  color: rgb(4, 73, 134);
+  text-decoration: solid;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}

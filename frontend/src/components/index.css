@@ -1,0 +1,16 @@
+.tb {
+  display: inline-flex;
+}
+
+section {
+  margin-left: 10px;
+  border-style: solid;
+  border-color: green;
+  align-items: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  padding-left: 50px;
+}
+.container {
+  display: inline-flex;
+}

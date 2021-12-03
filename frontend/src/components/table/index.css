@@ -1,0 +1,21 @@
+.cr {
+  text-align: center;
+}
+
+.table {
+  border-style: solid;
+  padding: 20px;
+  display: inline-block;
+  border-color: rgb(143, 42, 129);
+  width: 500px;
+  height: 400px;
+}
+
+.table p {
+  color: rgb(145, 10, 127);
+  font-size: 20px;
+  display: flex;
+  justify-content: flex-start;
+  top: 5px;
+  right: 10px;
+}
