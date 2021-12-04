@@ -1,5 +1,6 @@
 from typing import List
 from beanie import Document
+from datetime import datetime
 
 
 class User(Document):
@@ -16,8 +17,7 @@ class Game(Document):
 
 class Round(Document):
     game_id: str
-    start_time: int
-    end_time: str
+    end_time: float = datetime.timestamp(datetime.now()) + 15
     dragon_card: str = None
     tiger_card: str = None
     winner: str = None

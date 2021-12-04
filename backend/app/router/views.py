@@ -86,7 +86,6 @@ async def get_rounds():
 async def delete_rounds():
     return await Round.delete_all()
 
-
 '''
 ------------------------Player----------------------------------------------------------
 '''
