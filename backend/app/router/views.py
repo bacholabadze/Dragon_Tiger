@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta
 
 from fastapi.security import OAuth2PasswordRequestForm
-from ..configurations.config import settings
+from ..configurations.app_config import settings
 
 from ..models.docs import User, Game, Round, Player
 from ..models.user_out import UserOut
@@ -70,10 +70,10 @@ async def delete_games():
 async def new_round(round_new: Round, game_id: str):
     round_new.game_id = 'test123'
     round_new.start_time = time_stamp_now
-    round_new.end_time = round_new.start_time + 15
-    round_new.dragon_card = 'AH'  # For Testing Purposes
-    round_new.tiger_card = '4D'  # For Testing Purposes
-    round_new.winner = 'Tiger'  # For Testing Purposes
+    round_new.end_time = round_new.start_time + 30
+    round_new.dragon_card = ''  # For Testing Purposes
+    round_new.tiger_card = ''  # For Testing Purposes
+    round_new.winner = ''  # For Testing Purposes
     return await round_new.save()
 
 

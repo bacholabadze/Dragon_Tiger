@@ -36,7 +36,7 @@ def getCards():
 def cardMass(card):
     try:
         card = int(card)
-    except:
+    except ValueError:
         pass
     if type(card) == int:
         return card
@@ -78,5 +78,7 @@ def playGame():
     print(dragon, tiger)
     print(winner(dragon, tiger))
 
+
+# --------------------------------------------Only for Testing Purposes-------------------------------------------------
 
 playGame()

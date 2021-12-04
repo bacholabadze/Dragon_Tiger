@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 
 from ..router.views import router
-from ..configurations.config import settings
-from ..configurations.socketio_config import sio_app
+from ..configurations.app_config import settings
+from ..server.socketio import sio_app
 from ..models.docs import Game, Round, Player, User
 
 

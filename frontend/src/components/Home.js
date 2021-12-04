@@ -5,7 +5,7 @@ const Home = () => {
   const [games, setGames] = useState([]);
 
   const getGames = async () => {
-    const response = await axios.get("http://localhost:8000/api/get/all/game");
+    const response = await axios.get("http://localhost:8000/get/games");
     setGames(response.data);
   };
 
