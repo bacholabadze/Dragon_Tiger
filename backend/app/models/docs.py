@@ -28,8 +28,8 @@ class Round(Document):
 class Player(Document):
     game_id: str                        #Sad tamashobs
     total_bet: float = 0                #Sul ramdeni aqvs dadebuli
-    dragon_bet: List[int] = 0           #Pirvel Kartze Dadebuli Betebi
-    tiger_bet: List[int] = 0            #Meore Kartze Dadebuli Betebi
-    tie_bet: List[int] = 0              #Freze Dadebuli Betebi
+    dragon_bet: float = 0               #Pirvel Kartze Dadebuli Betebi
+    tiger_bet: float = 0                #Meore Kartze Dadebuli Betebi
+    tie_bet: float = 0                  #Freze Dadebuli Betebi
     total_win: float = 0                #Sul Mogebuli Tanxa
     balance: int = 100                  #Tanxis Raodenoba Balansze

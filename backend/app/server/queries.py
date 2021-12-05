@@ -19,3 +19,15 @@ async def get_or_create_player(game_round: str):
 
     player = Player(game_id=game_round)
     return await player.save()
+
+
+async def winner_payment(game_round):
+    async for player in Player.find(Player.game_id == str(game_round.id), Player.total_bet > 0):
+        if game_round.winner == 'dragon' and player.dragon_bet > 0:
+            player.balance += player.dragon_bet * 2
+        if game_round.winner == 'tiger' and player.tiger_bet > 0:
+            player.balance += player.tiger_bet * 2
+        if game_round.winner == 'tie' and player.tiger_bet > 0:
+            player.balance += player.tiger_bet * 11
+        print(f'[!] player: {player}')
+        await player.save()

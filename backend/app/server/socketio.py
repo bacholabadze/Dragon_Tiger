@@ -2,7 +2,7 @@ import socketio
 from beanie import PydanticObjectId
 from urllib.parse import parse_qs
 from ..models.docs import Game, Round, Player
-from .queries import get_or_create_game_round, get_or_create_player
+from .queries import get_or_create_game_round, get_or_create_player, winner_payment
 from ..game.gamelogics import find_winner, place_bets
 
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins=[])
@@ -28,7 +28,7 @@ async def connect(sid, environ):
     print(f'[!] data sent: {send_data}')
     sio.enter_room(sid, game_id)
     await sio.emit("on_connect_data", send_data, to=sid)
-    print("[V] Shemovedi.\n\n")
+    print("[V] Shemovedi uprobl.\n\n")
 
 
 @sio.event
@@ -46,42 +46,31 @@ async def scan_card(sid, data):
     print(f'[!] card received : {card}')
 
     if game_round.card_count == 0:
-
         game_round.dragon_card = card
         game_round.card_count += 1
         await game_round.save()
         await sio.emit("send_dragon_card", {"card": card}, room=game_round.round_id)
         print(f'[!] Dragon Card: {game_round.dragon_card}')
-
-    else:
-
         print(f'[!] card_count: {game_round.card_count}')
+    else:
         game_round.tiger_card = card
         game_round.card_count += 1
         await game_round.save()
         await sio.emit("send_tiger_card", {"card": card}, room=game_round.round_id)
         print(f'[!] Tiger Card: {game_round.tiger_card}')
 
-    if game_round.card_count == 2:
-
+    if game_round.tiger_card is not None:
         dragon_card = game_round.dragon_card
-        # print(f'[!] Dragon Card : {dragon_card}')
         tiger_card = game_round.tiger_card
-        # print(f'[!] Tiger Card: {tiger_card}')
         winner = find_winner(dragon_card, tiger_card)
-        # print(f'[!] Winner : {winner}')
+        print(f'[!] Winner : {winner}')
         game_round.winner = winner
         game_round.finished = True
         game_round.card_count = 0
         await game_round.save()
 
-    # aq moxddes modzebna mimdinare roundis players round id  = mimdinares round id
-    # moidzebnos yvela visac karti aqvs mogebulze 0 ze meti dadebuli
-    # moxdes datvla
-    # moxdes palyers al win is shecvla titoeultan
-    # all_player = await Player.find_all(Player.game_id == game_round.round_id, Player.game_id ==
-    #                                    str(game_round.id)).to_list()
-    # print(f'players won :{all_player}')
+    await winner_payment(game_round)
+    print('\t[!] Scanned Successfully')
 
 
 @sio.event
