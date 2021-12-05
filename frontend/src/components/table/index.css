@@ -8,7 +8,7 @@
   display: inline-block;
   border-color: rgb(143, 42, 129);
   width: 500px;
-  height: 400px;
+  height: 600px;
 }
 
 .table p {
@@ -18,4 +18,28 @@
   justify-content: flex-start;
   top: 5px;
   right: 10px;
+}
+
+.table > :not(:first-child) {
+  border-top: none;
+}
+
+.chips button {
+  border-radius: 50px;
+  background-color: rgb(131, 23, 32);
+}
+
+.time {
+  text-align: center;
+  align-items: center;
+}
+
+h1,
+h2,
+h3 {
+  color: rgb(145, 10, 127);
+}
+
+.scaned {
+  display: inherit;
 }

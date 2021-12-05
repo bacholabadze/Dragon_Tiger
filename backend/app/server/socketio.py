@@ -3,7 +3,7 @@ from beanie import PydanticObjectId
 from urllib.parse import parse_qs
 from ..models.docs import Game, Round, Player
 from .queries import get_or_create_game_round, get_or_create_player
-from ..game.gamelogics import find_winner
+from ..game.gamelogics import find_winner, place_bets
 
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins=[])
 sio_app = socketio.ASGIApp(sio)
@@ -11,52 +11,77 @@ sio_app = socketio.ASGIApp(sio)
 
 @sio.event
 async def connect(sid, environ):
+    print("\n\n\nShemovdivar Otaxshi.")
     game_id = parse_qs(environ['QUERY_STRING']).get("game_id")[0]
-    print({"game_id ": game_id})
+    print({"[!] game_id ": game_id})
     game = await Game.get(PydanticObjectId(game_id))
+    print(f'[!] game : {game}')
     game_round = await get_or_create_game_round(game_id)
+    print(f'[!] game_round: {game_round}')
     send_data = {
-        "name": game.table_name,
+        "name": game.name,
         "game_round_id": str(game_round.id),
         "max_bet": game.max_bet,
         "min_bet": game.min_bet,
         "start_timestamp": 15
-
     }
+    print(f'[!] data sent: {send_data}')
     sio.enter_room(sid, game_id)
     await sio.emit("on_connect_data", send_data, to=sid)
-    print("Shemovdivar Otaxshi.")
+    print("[V] Shemovedi.\n\n")
 
 
 @sio.event
 async def scan_card(sid, data):
+    print('[!] Scan_Card.')
+    print(f'[!] Data received: {data}')
+    game_round_id = data.get('game_round_id')
+    print(f'[!] game_round_id :{game_round_id}')
+    game_round = await Round.get(PydanticObjectId(game_round_id))
+    print(f'[!] game_round: {game_round}')
+    player = await get_or_create_player(game_round_id)
+    print(f'[!] player: {player}')
 
-    game_round = await Round.get(PydanticObjectId(data['game_round_id']))
     card = data['card']
-    if game_round.card_count % 2:
-        game_round.tiger_card = card
-        game_round.card_count += 1
-        await game_round.save()
-        await sio.emit("send_tiger_card", {"card": card}, room=game_round.game_id)
-    else:
+    print(f'[!] card received : {card}')
+
+    if game_round.card_count == 0:
+
         game_round.dragon_card = card
         game_round.card_count += 1
         await game_round.save()
-        await sio.emit("send_dragon_card", {"card": card}, room=game_round.game_id)
+        await sio.emit("send_dragon_card", {"card": card}, room=game_round.round_id)
+        print(f'[!] Dragon Card: {game_round.dragon_card}')
+
+    else:
+
+        print(f'[!] card_count: {game_round.card_count}')
+        game_round.tiger_card = card
+        game_round.card_count += 1
+        await game_round.save()
+        await sio.emit("send_tiger_card", {"card": card}, room=game_round.round_id)
+        print(f'[!] Tiger Card: {game_round.tiger_card}')
 
     if game_round.card_count == 2:
+
         dragon_card = game_round.dragon_card
+        # print(f'[!] Dragon Card : {dragon_card}')
         tiger_card = game_round.tiger_card
+        # print(f'[!] Tiger Card: {tiger_card}')
         winner = find_winner(dragon_card, tiger_card)
+        # print(f'[!] Winner : {winner}')
         game_round.winner = winner
         game_round.finished = True
         game_round.card_count = 0
         await game_round.save()
 
-    players_won = await Player.find_all(Player.game_id == game_round.game_id,
-                                        Player.round_id == str(game_round.id)).to_list()
-    print(players_won)
-    print({"game_round ": game_round})
+    # aq moxddes modzebna mimdinare roundis players round id  = mimdinares round id
+    # moidzebnos yvela visac karti aqvs mogebulze 0 ze meti dadebuli
+    # moxdes datvla
+    # moxdes palyers al win is shecvla titoeultan
+    # all_player = await Player.find_all(Player.game_id == game_round.round_id, Player.game_id ==
+    #                                    str(game_round.id)).to_list()
+    # print(f'players won :{all_player}')
 
 
 @sio.event
@@ -66,21 +91,11 @@ async def place_bet(sid, data):
     print(f'[!] amount = {amount}')
     card_type = data.get('type')
     print(f'[!] card_type = {card_type}')
-    game_round = await Round.get(PydanticObjectId(data.get('game_round_id')))
-    print(f'[!] game_round = {game_round}')
+    round_id = data.get('game_round_id')
 
-
-    player = await get_or_create_player()
+    player = await get_or_create_player(round_id)
     print(f'[!] player = {player}')
-    if card_type == "tiger":
-        player.tiger_bet = amount
-        await player.save()
-    elif card_type == "dragon":
-        player.dragon_bet = amount
-        await player.save()
-    else:
-        player.tie_bet = amount
-        await player.save()
+    await place_bets(player, card_type, amount)
 
 
 @sio.event

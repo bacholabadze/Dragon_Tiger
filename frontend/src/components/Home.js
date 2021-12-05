@@ -18,7 +18,7 @@ const Home = () => {
       return (
         <section>
           <p>Table Name: {game.name}</p>
-          <p>Min bet on this table: {game.minBet}</p>
+          <p>Min bet on this table: {game.min_bet}</p>
 
           <a href={`http://localhost:3000/game/${game._id}`}>{game._id}</a>
         </section>

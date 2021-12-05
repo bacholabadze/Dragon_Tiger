@@ -40,3 +40,23 @@ def cardMass(card):
     else:
         return 13
 
+
+"""
+Betting logics
+
+"""
+
+
+async def place_bets(player, card_type, amount):
+    if card_type == "dragon":
+        player.dragon_bet += amount
+        player.balance -= amount
+    elif card_type == "tiger":
+        player.tiger_bet += amount
+        player.balance -= amount
+    else:
+        player.tie_bet += amount
+        player.balance -= amount
+
+    player.total_bet += amount
+    return await player.save()

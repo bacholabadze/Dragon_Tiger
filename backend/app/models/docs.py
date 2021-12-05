@@ -10,13 +10,13 @@ class User(Document):
 
 
 class Game(Document):
-    table_name: str = 'test'
+    name: str = 'test'
     min_bet: float = '5'
     max_bet: float = '200'
 
 
 class Round(Document):
-    game_id: str
+    round_id: str
     end_time: float = datetime.timestamp(datetime.now()) + 15
     dragon_card: str = None
     tiger_card: str = None
@@ -27,7 +27,6 @@ class Round(Document):
 
 class Player(Document):
     game_id: str                        #Sad tamashobs
-    round_id: str                       #Romel raundshi tamashoba
     total_bet: float = 0                #Sul ramdeni aqvs dadebuli
     dragon_bet: List[int] = 0           #Pirvel Kartze Dadebuli Betebi
     tiger_bet: List[int] = 0            #Meore Kartze Dadebuli Betebi
